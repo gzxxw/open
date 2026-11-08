@@ -131,6 +131,18 @@ h1 em{font-style:normal;color:var(--green)}
 .cmd-row{margin-top:18px}
 .cmd-lab{font-size:13px;font-weight:700;color:#1f1f1f;margin-bottom:8px}
 .cmd-lab code{font-size:12px}
+.dl{margin-top:18px}
+.dl-main{display:flex;align-items:center;gap:13px;padding:15px 17px;background:var(--green);color:#fff;text-decoration:none;border:2px solid var(--green)}
+.dl-main:hover{background:#00702f;border-color:#00702f}
+.dl-icon{flex:none;width:30px;height:30px;border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800}
+.dl-txt b{display:block;font-size:15.5px;font-weight:800;letter-spacing:-.01em}
+.dl-txt small{display:block;font-size:12px;opacity:.86;margin-top:2px;font-family:var(--mono)}
+.dl-alt{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+.dl-alt a{font-size:12.5px;padding:7px 12px;border:1px solid var(--ink);color:var(--ink);text-decoration:none;background:#fff}
+.dl-alt a:hover{background:var(--ink);color:#fff}
+.dl-note{margin-top:9px;font-size:11.5px;color:var(--gray);line-height:1.6}
+a.dlink{color:var(--green);font-family:var(--mono);font-size:12px;text-decoration:underline;text-underline-offset:2px;word-break:break-all}
+a.dlink:hover{color:var(--ink)}
 .fields{width:100%;border-collapse:collapse;margin-top:16px;font-size:13.5px}
 .fields caption{text-align:left;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);font-weight:700;padding-bottom:7px}
 .fields th{text-align:left;font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--ink);padding:6px 9px}
@@ -274,20 +286,28 @@ footer img{width:12px;height:12px;display:inline;vertical-align:-1px;filter:gray
       <div class="step-body">
         <div>
           <ul class="do">
-            <li><b>1</b><span>打开 <code>github.com/OpenListTeam/OpenList/releases/latest</code></span></li>
-            <li><b>2</b><span>在文件列表里点 <code>openlist-windows-amd64.zip</code></span></li>
-            <li><b>3</b><span>下完把 zip 拖到桌面，<b>右键 → 全部解压</b>，别在压缩包里直接双击</span></li>
+            <li><b>1</b><span>点下面任意一条直链直接下载（推荐第一条，国内最快）</span></li>
+            <li><b>2</b><span>下完把 zip 拖到桌面，<b>右键 → 全部解压</b>，别在压缩包里直接双击</span></li>
+            <li><b>3</b><span>解压出来就一个 <code>openlist.exe</code>，约 150 MB</span></li>
           </ul>
-          <div class="tip"><span class="lab">提示</span><p>带 <code>-lite</code> 的包也能用，只是支持的格式少一些。老机器或 Win7 见右表。</p></div>
+
+          <div class="dl">
+            <a class="dl-main" href="https://ghfast.top/https://github.com/OpenListTeam/OpenList/releases/download/v4.2.9/openlist-windows-amd64.zip" target="_blank" rel="noopener">
+              <span class="dl-icon" aria-hidden="true">↓</span>
+              <span class="dl-txt"><b>下载 openlist-windows-amd64.zip</b><small>v4.2.9 · GitHub 加速镜像 · 约 54 MB</small></span>
+            </a>
+            <div class="dl-alt"><a href="https://gh-proxy.com/https://github.com/OpenListTeam/OpenList/releases/download/v4.2.9/openlist-windows-amd64.zip" target="_blank" rel="noopener">gh-proxy.com 镜像</a><a href="https://ghproxy.net/https://github.com/OpenListTeam/OpenList/releases/download/v4.2.9/openlist-windows-amd64.zip" target="_blank" rel="noopener">ghproxy.net 镜像</a><a href="https://github.com/OpenListTeam/OpenList/releases/download/v4.2.9/openlist-windows-amd64.zip" target="_blank" rel="noopener">GitHub 原站</a></div>
+            <p class="dl-note">三个镜像都实测可用（返回正常的 zip）。原站国内有时打不开，镜像失效就换下一条。</p>
+          </div>
         </div>
         <div>
           <table class="fields">
             <caption>对号入座选包</caption>
             <tr><th>你的机器</th><th>下这个</th></tr>
-            <tr><td>64 位 Win10/11</td><td><code>openlist-windows-amd64.zip</code> <span class="req">首选</span></td></tr>
-            <tr><td>64 位但启动报错</td><td><code>openlist-windows-amd64-lite.zip</code></td></tr>
-            <tr><td>Win7 / 很老的机器</td><td><code>openlist-windows7-amd64.zip</code></td></tr>
-            <tr><td>32 位系统</td><td><code>openlist-windows-386.zip</code></td></tr>
+            <tr><td>64 位 Win10/11</td><td><a class="dlink" href="https://ghfast.top/https://github.com/OpenListTeam/OpenList/releases/download/v4.2.9/openlist-windows-amd64.zip" target="_blank" rel="noopener">openlist-windows-amd64.zip</a> <span class="req">首选</span></td></tr>
+            <tr><td>64 位但启动报错</td><td><a class="dlink" href="https://ghfast.top/https://github.com/OpenListTeam/OpenList/releases/download/v4.2.9/openlist-windows-amd64-lite.zip" target="_blank" rel="noopener">openlist-windows-amd64-lite.zip</a></td></tr>
+            <tr><td>Win7 / 很老的机器</td><td><a class="dlink" href="https://ghfast.top/https://github.com/OpenListTeam/OpenList/releases/download/v4.2.9/openlist-windows7-amd64.zip" target="_blank" rel="noopener">openlist-windows7-amd64.zip</a></td></tr>
+            <tr><td>32 位系统</td><td><a class="dlink" href="https://ghfast.top/https://github.com/OpenListTeam/OpenList/releases/download/v4.2.9/openlist-windows-386.zip" target="_blank" rel="noopener">openlist-windows-386.zip</a></td></tr>
           </table>
         </div>
       </div>
