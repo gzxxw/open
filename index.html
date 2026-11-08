@@ -81,6 +81,10 @@ h1 em{font-style:normal;color:var(--green)}
 .do li:first-child{border-top:2px solid var(--ink)}
 .do li span{flex:1;min-width:0;overflow-wrap:anywhere}
 .do li b{flex:none;width:15px;font-size:11.5px;font-weight:800;color:var(--orange);font-variant-numeric:tabular-nums;padding-top:3px}
+.blk{position:relative}
+.copybtn{position:absolute;top:8px;right:8px;z-index:2;font-family:var(--sans);font-size:11.5px;font-weight:700;letter-spacing:.02em;padding:5px 11px;background:#2b2b2b;color:#d8d8d8;border:1px solid #4a4a4a;cursor:pointer}
+.copybtn:hover{background:var(--green);border-color:var(--green);color:#fff}
+.copybtn.ok{background:var(--green);border-color:var(--green);color:#fff}
 .block{font-family:var(--mono);font-size:12.5px;line-height:1.9;background:var(--ink);color:#e8e8e8;padding:14px 16px;overflow-x:auto;white-space:pre;margin-top:4px}
 .block .cmt{color:#8b9a90}
 .block .k{color:#8ee0a8}
@@ -121,6 +125,12 @@ h1 em{font-style:normal;color:var(--green)}
 .vault-actions button:hover{background:var(--green);color:#fff;border-color:var(--green)}
 .vault-hint{font-size:12.5px;color:var(--gray)}
 #vault-json{max-height:340px;overflow:auto;font-size:12px;line-height:1.7;white-space:pre-wrap;word-break:break-all}
+.cmdsec{margin-top:34px;border-top:2px solid var(--ink);padding-top:22px}
+.cmd-t{font-size:16.5px;font-weight:800;letter-spacing:-.01em}
+.cmd-sub{margin-top:6px;font-size:13.5px;line-height:1.7;color:#3c3c3c;max-width:74ch}
+.cmd-row{margin-top:18px}
+.cmd-lab{font-size:13px;font-weight:700;color:#1f1f1f;margin-bottom:8px}
+.cmd-lab code{font-size:12px}
 .fields{width:100%;border-collapse:collapse;margin-top:16px;font-size:13.5px}
 .fields caption{text-align:left;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);font-weight:700;padding-bottom:7px}
 .fields th{text-align:left;font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--ink);padding:6px 9px}
@@ -176,6 +186,7 @@ footer img{width:12px;height:12px;display:inline;vertical-align:-1px;filter:gray
   .step-head{flex-direction:column;gap:9px}
   .step-num{font-size:48px;width:auto}
   .step-body{grid-template-columns:minmax(0,1fr);gap:24px}
+  .cmdsec{margin-top:28px;padding-top:18px}
   .vault-form{flex-direction:column;gap:8px}
   .vault-form input{border-right:1px solid var(--ink)}
   .vault-head{padding:16px}
@@ -474,13 +485,75 @@ footer img{width:12px;height:12px;display:inline;vertical-align:-1px;filter:gray
 POST /api/fs/copy
 <span class="k">→ Successfully created 1 copy task(s)</span>
 <span class="cmt"># 不是「复制→切目录→粘贴」的剪贴板流程</span>
-<span class="cmt"># 命令行也没有 copy 命令，别去试</span></div>
+<span class="cmt"># 官方命令行没有 copy 子命令，但下面这段能直接跑</span></div>
           <div class="figure" style="margin-top:16px">
             <img src="assets/opt/front-123.jpg" alt="前台首页浏览已接入的目录">
             <figcaption><b>图</b>前台首页就是操作台：先选来源，再选归档位置。</figcaption>
           </div>
         </div>
       </div>
+    
+
+
+        <div class="cmdsec">
+          <div class="cmd-t">命令行复制（点一下复制，粘到 PowerShell 里回车）</div>
+          <p class="cmd-sub">官方 CLI 没有 copy 子命令。<b>OpenList 自带一个可复制走的 .ps1 脚本</b>：它先登录拿 token，再调 <code>POST /api/fs/copy</code>，效果和在网页点复制一模一样（同样是后台任务）。</p>
+
+          <div class="cmd-row">
+            <div class="cmd-lab">① 先设两个目录（把 <code>/school/某文件夹</code> 换成你要的源，<code>/pan123</code> 换目标）</div>
+            <div class="blk"><button class="copybtn" data-copy="SRC">复制</button><div class="block" id="cp-cmd1"><span class="cmt"># 源目录 → 目标目录</span>
+$SRC = "/school"
+$DST = "/pan123"</div></div>
+          </div>
+
+          <div class="cmd-row">
+            <div class="cmd-lab">② 整段脚本：登录 → 建任务 → 打印任务 id</div>
+            <div class="blk"><button class="copybtn" id="cp-script-btn">复制整段脚本</button><div class="block" id="cp-script"><span class="cmt"># openlist-copy.ps1 —— 用法：.\openlist-copy.ps1 -Src /school -Dst /pan123 -Names "a.pdf","b"</span>
+param(
+  [Parameter(Mandatory=$true)][string]$Src,
+  [Parameter(Mandatory=$true)][string]$Dst,
+  [Parameter(Mandatory=$true)][string[]]$Names,
+  [string]$User = "admin",
+  [string]$Pass = "",
+  [string]$Base = "http://127.0.0.1:5244",
+  [switch]$Overwrite
+)
+if (-not $Pass) { $secure = Read-Host "OpenList 口令" -AsSecureString; $Pass = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)) }
+
+$login = Invoke-RestMethod -Method Post -Uri "$Base/api/auth/login" `
+  -ContentType "application/json" -Body (@{ username=$User; password=$Pass } | ConvertTo-Json)
+if ($login.code -ne 200) { Write-Error "登录失败：$($login.message)"; exit 1 }
+$token = $login.data.token
+
+$body = @{
+  src_dir       = $Src
+  dst_dir       = $Dst
+  names         = $Names
+  overwrite     = [bool]$Overwrite
+  skip_existing = (-not $Overwrite)
+  merge         = $false
+} | ConvertTo-Json -Depth 4
+
+$res = Invoke-RestMethod -Method Post -Uri "$Base/api/fs/copy" `
+  -Headers @{ Authorization = $token } -ContentType "application/json" -Body $body
+
+if ($res.code -ne 200) { Write-Error "提交失败：$($res.message)"; exit 1 }
+Write-Host "已提交：$($res.data.tasks.Count) 个任务" -ForegroundColor Green
+$res.data.tasks | ForEach-Object { Write-Host ("  task {0}  {1}" -f $_.id, $_.name) }
+Write-Host "进度：后台 → 任务 → 复制" -ForegroundColor Cyan</div></div>
+          </div>
+
+          <div class="cmd-row">
+            <div class="cmd-lab">③ 跑它（整个文件夹就写文件夹名，多个用逗号隔开）</div>
+            <div class="blk"><button class="copybtn" data-copy="RUN">复制</button><div class="block" id="cp-cmd3"><span class="cmt"># 复制一个文件夹</span>
+.\openlist-copy.ps1 -Src /school -Dst /pan123 -Names "课件"
+
+<span class="cmt"># 复制两个文件，同名覆盖</span>
+.\openlist-copy.ps1 -Src /school -Dst /pan123 -Names "a.pdf","b.zip" -Overwrite</div></div>
+          </div>
+
+          <div class="tip warn"><span class="lab">注意</span><p>脚本会问口令（不会写进文件）。提交后依然是<b>后台任务</b>，PowerShell 窗口不能关，进度去后台 → 任务 → 复制里看。</p></div>
+        </div>
     </section>
 
     <section class="step" id="s7">
@@ -622,6 +695,29 @@ const VAULT = {
 
 </script>
 <script>
+
+document.querySelectorAll('.copybtn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const blk = btn.parentElement.querySelector('.block');
+    if(!blk) return;
+    let text = blk.innerText;
+    // 去掉行首的注释提示保留（用户可能需要），直接复制全文
+    try {
+      await navigator.clipboard.writeText(text);
+      const old = btn.textContent;
+      btn.textContent = '已复制';
+      btn.classList.add('ok');
+      setTimeout(()=>{ btn.textContent = old; btn.classList.remove('ok'); }, 1600);
+    } catch(e) {
+      // 兜底：选中文本让用户自己 Ctrl+C
+      const r = document.createRange(); r.selectNodeContents(blk);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      btn.textContent = '已选中，按 Ctrl+C';
+      setTimeout(()=>{ btn.textContent = '复制'; }, 2600);
+    }
+  });
+});
+
 const links=[...document.querySelectorAll('#rail a')];
 const secs=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
 const io=new IntersectionObserver(es=>{
