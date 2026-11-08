@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>归档手册 · 一次性把资料收进自己的空间</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{
+  --ink:#0d0d0d; --paper:#fff; --green:#00893d; --orange:#e8611a;
+  --gray:#6b6b6b; --line:#dcdcdc; --bg:#f2f2f0;
+  --sans:"Helvetica Neue",Helvetica,Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --mono:"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+code{font-family:var(--mono);font-size:.88em;background:#efefec;border:1px solid #dedddb;padding:1px 5px;white-space:nowrap}
+
+/* 顶部链路条 */
+.route{position:sticky;top:0;z-index:40;background:var(--ink);color:#fff;display:flex;align-items:stretch;font-size:12.5px;border-bottom:3px solid var(--green)}
+.route .brand{display:flex;align-items:center;gap:9px;padding:0 20px;font-weight:700;letter-spacing:.06em;border-right:1px solid #333;white-space:nowrap}
+.route .brand img{width:17px;height:17px;filter:grayscale(1) brightness(3)}
+.route .chain{display:flex;align-items:center;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+.route .chain::-webkit-scrollbar{display:none}
+.hop{display:flex;align-items:center;gap:8px;padding:12px 15px;white-space:nowrap;color:#b9b9b9}
+.hop b{color:#fff;font-weight:600}
+.hop .sq{width:9px;height:9px;background:var(--green);flex:none}
+.hop.mid .sq{background:#fff}
+.hop.end .sq{background:var(--orange)}
+.arrow{color:#555;font-size:11px}
+
+/* 首屏 */
+.hero{display:grid;grid-template-columns:1fr 340px;border-bottom:1px solid var(--ink)}
+.hero-main{padding:54px 54px 44px}
+.kicker{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--green);margin-bottom:24px}
+.kicker .sq{width:11px;height:11px;background:var(--green)}
+h1{font-size:clamp(34px,4.6vw,64px);line-height:1.05;letter-spacing:-.025em;font-weight:800;max-width:16ch}
+h1 em{font-style:normal;color:var(--green)}
+.hero-sub{margin-top:24px;max-width:48ch;font-size:16px;line-height:1.75;color:#333}
+.hero-sub strong{font-weight:700;background:linear-gradient(transparent 62%,#ffe2cb 62%)}
+.hero-side{border-left:1px solid var(--ink);display:flex;flex-direction:column}
+.factlet{padding:18px 22px;border-bottom:1px solid var(--line)}
+.factlet:last-child{border-bottom:0}
+.factlet dt{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);font-weight:700}
+.factlet dd{font-size:15px;font-weight:700;margin-top:3px}
+.factlet dd small{display:block;font-weight:400;font-size:12px;color:var(--gray);margin-top:2px}
+.picto{width:96px;height:96px;margin:24px 22px 20px auto}
+
+/* 自检 */
+.check{background:var(--bg);border-bottom:1px solid var(--ink);padding:28px 54px;display:grid;grid-template-columns:190px 1fr;gap:30px;align-items:start}
+.check h2{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.check h2 span{display:block;font-size:11px;color:var(--gray);letter-spacing:0;text-transform:none;font-weight:400;margin-top:5px}
+.check ol{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:0 26px}
+.check li{display:flex;gap:10px;font-size:14px;line-height:1.55;padding:8px 0;border-top:1px solid #cfcfcf}
+.check li b{font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:800;color:var(--green);flex:none;width:17px;padding-top:2px}
+
+/* 主体 */
+.shell{display:grid;grid-template-columns:236px 1fr}
+.shell > main{min-width:0}
+.rail{border-right:1px solid var(--ink);padding:30px 0 60px;position:sticky;top:41px;align-self:start;max-height:calc(100vh - 41px);overflow-y:auto;background:var(--paper)}
+.rail-title{padding:0 22px 12px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gray);font-weight:700}
+.rail a{display:flex;align-items:baseline;gap:11px;padding:9px 22px;text-decoration:none;color:var(--ink);font-size:13.5px;border-left:4px solid transparent;transition:background .14s,border-color .14s}
+.rail a:hover{background:#f4f4f2}
+.rail a b{font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:800;color:var(--gray);width:17px;flex:none}
+.rail a.is-active{border-left-color:var(--green);background:#eff7f1;font-weight:700}
+.rail a.is-active b{color:var(--green)}
+.rail .divider{height:1px;background:var(--line);margin:13px 22px}
+
+.step{padding:48px 54px 42px;border-bottom:1px solid var(--line);scroll-margin-top:41px}
+.step-head{display:flex;gap:24px;align-items:flex-start;margin-bottom:20px}
+.step-num{font-size:70px;line-height:.8;font-weight:800;letter-spacing:-.05em;color:var(--green);flex:none;width:98px;font-variant-numeric:tabular-nums}
+.step-title h3{font-size:clamp(23px,2.4vw,32px);line-height:1.14;letter-spacing:-.022em;font-weight:800}
+.step-title p{margin-top:8px;font-size:15px;color:#3c3c3c;max-width:56ch;line-height:1.65}
+.step-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:34px;align-items:start}
+.step-body > div{min-width:0}
+
+.do{list-style:none}
+.do li{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line);font-size:14.5px;line-height:1.6}
+.do li:first-child{border-top:2px solid var(--ink)}
+.do li span{flex:1;min-width:0;overflow-wrap:anywhere}
+.do li b{flex:none;width:15px;font-size:11.5px;font-weight:800;color:var(--orange);font-variant-numeric:tabular-nums;padding-top:3px}
+.block{font-family:var(--mono);font-size:12.5px;line-height:1.9;background:var(--ink);color:#e8e8e8;padding:14px 16px;overflow-x:auto;white-space:pre;margin-top:4px}
+.block .cmt{color:#8b9a90}
+.block .k{color:#8ee0a8}
+.figure img{border:1px solid var(--ink);width:100%}
+.figure figcaption{margin-top:7px;font-size:11.5px;color:var(--gray);display:flex;gap:7px}
+.figure figcaption b{color:var(--orange);font-weight:700;flex:none}
+.tip{margin-top:18px;display:flex;gap:11px;border-left:4px solid var(--orange);background:#fdf3ec;padding:12px 15px;font-size:13.5px;line-height:1.6}
+.tip.warn{border-color:#c8102e;background:#fdeef0}
+.tip .lab{flex:none;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);padding-top:3px;width:48px}
+.tip.warn .lab{color:#c8102e}
+.tip p{flex:1;min-width:0;overflow-wrap:anywhere}
+
+.acc{border:1px solid var(--ink);background:#fafaf8}
+.acc summary{list-style:none;cursor:pointer;padding:14px 18px;font-size:14.5px;font-weight:700;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"＋";color:var(--green);font-weight:800;font-size:16px}
+.acc[open] summary::after{content:"－"}
+.acc[open] summary{border-bottom:1px solid var(--line)}
+.acc-body{padding:16px 18px 18px}
+.acc-body p{font-size:14px;line-height:1.7;color:#3c3c3c;margin-bottom:12px}
+.acc-body p:last-of-type{margin-bottom:8px}
+.fields{width:100%;border-collapse:collapse;margin-top:16px;font-size:13.5px}
+.fields caption{text-align:left;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);font-weight:700;padding-bottom:7px}
+.fields th{text-align:left;font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--ink);padding:6px 9px}
+.fields td{padding:8px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+.fields td:first-child{font-family:var(--mono);font-size:12px;white-space:nowrap}
+.fields tr:nth-child(even) td{background:#fafaf8}
+.req{color:var(--orange);font-weight:800}
+
+.finish{background:var(--ink);color:#fff;padding:50px 54px;display:grid;grid-template-columns:1.1fr 1fr;gap:46px}
+.finish h3{font-size:clamp(23px,2.3vw,30px);line-height:1.16;letter-spacing:-.02em;font-weight:800}
+.finish h3 em{font-style:normal;color:#5ae08c}
+.finish p{margin-top:13px;font-size:14.5px;line-height:1.75;color:#d8d8d8;max-width:44ch}
+.finish code{background:#242424;border-color:#3a3a3a;color:#f0f0f0}
+.finish ol{list-style:none;counter-reset:f}
+.finish li{counter-increment:f;display:flex;gap:13px;padding:12px 0;border-top:1px solid #333;font-size:14px;line-height:1.6;color:#e8e8e8}
+.finish li::before{content:counter(f,decimal-leading-zero);font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:800;color:#5ae08c;flex:none;padding-top:3px}
+.finish li b{color:#fff}
+.finish .app{display:flex;align-items:center;gap:8px;margin-top:18px}
+.finish .app img{width:26px;height:26px;border-radius:6px}
+.finish .app span{font-size:12.5px;color:#bdbdbd;letter-spacing:.02em}
+
+.faq{padding:48px 54px}
+.faq h2{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--green);font-weight:800;margin-bottom:24px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 42px}
+.qa{border-top:1px solid var(--line);padding:15px 0}
+.qa:nth-child(1){border-top:2px solid var(--ink)}
+.qa:nth-child(4){border-top:2px solid var(--ink)}
+.qa dt{font-size:14.5px;font-weight:700;line-height:1.45;display:flex;gap:8px}
+.qa dt::before{content:"?";color:var(--orange);font-weight:800;flex:none}
+.qa dd{margin-top:6px;font-size:13.5px;line-height:1.7;color:#3c3c3c;padding-left:21px}
+
+footer{padding:20px 54px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;font-size:11.5px;color:var(--gray)}
+footer a{color:var(--gray)}
+footer img{width:12px;height:12px;display:inline;vertical-align:-1px;filter:grayscale(1) opacity(.6)}
+
+@media (max-width:1000px){
+  .hero{grid-template-columns:1fr}
+  .hero-side{border-left:0;border-top:1px solid var(--ink);flex-direction:row;flex-wrap:wrap}
+  .factlet{flex:1 1 45%;border-bottom:0;border-right:1px solid var(--line)}
+  .picto{display:none}
+  .check{grid-template-columns:1fr;gap:16px;padding:24px 22px}
+  .check ol{grid-template-columns:1fr}
+  .shell{grid-template-columns:1fr}
+  .rail{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--ink);padding:14px 0;display:flex;overflow-x:auto;width:100%;max-width:100vw}
+  .rail-title,.rail .divider{display:none}
+  .rail a{flex:none;border-left:0;border-bottom:3px solid transparent;padding:7px 13px;font-size:13px}
+  .rail a.is-active{border-bottom-color:var(--green)}
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .shell > main{min-width:0;max-width:100vw}
+  code{white-space:normal;overflow-wrap:anywhere}
+  .fields td:first-child{white-space:normal;overflow-wrap:anywhere}
+  .step{padding:32px 22px 30px;scroll-margin-top:56px}
+  .step-head{flex-direction:column;gap:9px}
+  .step-num{font-size:48px;width:auto}
+  .step-body{grid-template-columns:minmax(0,1fr);gap:24px}
+  .block{white-space:pre-wrap;word-break:break-word}
+  .hero-main{padding:32px 22px 28px}
+  .finish{grid-template-columns:1fr;padding:32px 22px;gap:26px}
+  .faq{padding:32px 22px}
+  .faq-grid{grid-template-columns:1fr}
+  .qa:nth-child(4){border-top:1px solid var(--line)}
+  .qa:nth-child(2){border-top:2px solid var(--ink)}
+  footer{padding:16px 22px;flex-direction:column;gap:7px}
+  .route .brand{padding:0 13px;font-size:12px}
+  .hop{padding:11px 10px}
+}
+</style>
+</head>
+<body>
+
+<div class="route">
+  <div class="brand"><img src="assets/openlist-logo.svg" alt="">归档手册</div>
+  <div class="chain">
+    <div class="hop"><span class="sq"></span>来源目录 <b>10.212.x.x</b></div>
+    <span class="arrow">→</span>
+    <div class="hop mid"><span class="sq"></span>本机 <b>127.0.0.1:5244</b></div>
+    <span class="arrow">→</span>
+    <div class="hop end"><span class="sq"></span><b>个人云盘</b></div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="hero-main">
+    <div class="kicker"><span class="sq"></span>8 步 · 约 15 分钟 · Windows</div>
+    <h1>把要留的东西<br>收进<em>自己的空间</em></h1>
+    <p class="hero-sub">有些资料只在那台机器上、只在那个网络里看得到，出了那扇门就打不开了。办法是：在那台机器上跑一个叫 OpenList 的小程序，它同时连住<strong>那台机器上的目录</strong>和<strong>你的云盘账号</strong>；你在网页上点一次复制，东西就从这头到那头。之后在任何设备上都能打开。</p>
+  </div>
+  <div class="hero-side">
+    <div class="factlet"><dt>你需要</dt><dd>一台能上外网的电脑<small>能打开 GitHub 和云盘网页版</small></dd></div>
+    <div class="factlet"><dt>账号</dt><dd>只有个人云盘账号<small>GitHub 账号不需要</small></dd></div>
+    <div class="factlet"><dt>不用装</dt><dd>解压即用<small>删掉文件夹就等于卸载</small></dd></div>
+    <svg class="picto" viewBox="0 0 120 120" aria-hidden="true">
+      <rect x="6" y="54" width="30" height="26" fill="#0d0d0d"/>
+      <rect x="45" y="24" width="30" height="56" fill="#00893d"/>
+      <rect x="84" y="54" width="28" height="26" fill="#e8611a"/>
+      <path d="M36 67 h9 M75 67 h9" stroke="#0d0d0d" stroke-width="4"/>
+      <path d="M55 32 l5 -5 5 5" fill="none" stroke="#fff" stroke-width="3"/>
+      <rect x="58.5" y="28" width="3" height="20" fill="#fff"/>
+    </svg>
+  </div>
+</header>
+
+<section class="check">
+  <h2>开工前 30 秒自检<span>有一条不成立，先别往下做</span></h2>
+  <ol>
+    <li><b>01</b><span>资源管理器地址栏敲手上那个 <code>\\10.212.x.x</code>，能打开看到文件。</span></li>
+    <li><b>02</b><span>同一台机器能打开你的云盘网页版，说明它连得上外网。</span></li>
+    <li><b>03</b><span>云盘账号记得密码，能登录网页版。</span></li>
+  </ol>
+</section>
+
+<div class="shell">
+  <nav class="rail" id="rail">
+    <div class="rail-title">步骤路标</div>
+    <a href="#s1"><b>01</b>准备工具包</a>
+    <a href="#s2"><b>02</b>在本机跑起来</a>
+    <a href="#s3"><b>03</b>设置访问口令</a>
+    <a href="#s4"><b>04</b>接入来源目录</a>
+    <a href="#s5"><b>05</b>接入归档位置</a>
+    <a href="#s6"><b>06</b>发起一次归档</a>
+    <a href="#s7"><b>07</b>查看队列</a>
+    <a href="#s8"><b>08</b>清理本机</a>
+    <div class="divider"></div>
+    <a href="#faq"><b>?</b>卡住了</a>
+  </nav>
+
+  <main>
+    <section class="step" id="s1">
+      <div class="step-head">
+        <div class="step-num">01</div>
+        <div class="step-title">
+          <h3>准备工具包</h3>
+          <p>只有一个压缩包，解压出来是一个 <code>openlist.exe</code>。不用安装，删掉文件夹就等于卸载干净。</p>
+        </div>
+      </div>
+      <div class="step-body">
+        <div>
+          <ul class="do">
+            <li><b>1</b><span>打开 <code>github.com/OpenListTeam/OpenList/releases/latest</code></span></li>
+            <li><b>2</b><span>在文件列表里点 <code>openlist-windows-amd64.zip</code></span></li>
+            <li><b>3</b><span>下完把 zip 拖到桌面，<b>右键 → 全部解压</b>，别在压缩包里直接双击</span></li>
+          </ul>
+          <div class="tip"><span class="lab">提示</span><p>带 <code>-lite</code> 的包也能用，只是支持的格式少一些。老机器或 Win7 见右表。</p></div>
+        </div>
+        <div>
+          <table class="fields">
+            <caption>对号入座选包</caption>
+            <tr><th>你的机器</th><th>下这个</th></tr>
+            <tr><td>64 位 Win10/11</td><td><code>openlist-windows-amd64.zip</code> <span class="req">首选</span></td></tr>
+            <tr><td>64 位但启动报错</td><td><code>openlist-windows-amd64-lite.zip</code></td></tr>
+            <tr><td>Win7 / 很老的机器</td><td><code>openlist-windows7-amd64.zip</code></td></tr>
+            <tr><td>32 位系统</td><td><code>openlist-windows-386.zip</code></td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" id="s2">
+      <div class="step-head">
+        <div class="step-num">02</div>
+        <div class="step-title">
+          <h3>在本机跑起来</h3>
+          <p>双击它只会闪一下黑窗口就没了，它在等命令。要在那个文件夹里开一个 PowerShell，把 <code>server</code> 敲进去。</p>
+        </div>
+      </div>
+      <div class="step-body">
+        <div>
+          <ul class="do">
+            <li><b>1</b><span>打开解压出来的文件夹，点一下地址栏，清空路径，输入 <code>powershell</code> 回车</span></li>
+            <li><b>2</b><span>窗口里输入下面这行，回车</span></li>
+          </ul>
+          <div class="block">.\openlist.exe server</div>
+          <ul class="do" style="margin-top:16px">
+            <li><b>3</b><span>刷出 <code>start server @ 0.0.0.0:5244</code> 就是在跑了</span></li>
+            <li><b>4</b><span><b>这个窗口全程别关</b>，服务就活在里面</span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="block"><span class="cmt">PS C:\Users\you\Desktop\openlist&gt;</span> .\openlist.exe server
+<span class="cmt">INFO</span>  reading config and data
+<span class="cmt">INFO</span>  initializing admin user...
+<span class="cmt">INFO</span>  <span class="k">start server @ 0.0.0.0:5244</span>
+<span class="cmt">INFO</span>  admin user is initialized</div>
+          <div class="tip warn"><span class="lab">注意</span><p>窗口一关服务就停，正在跑的任务会断。所以第 06 步的做法是「提交后在后台排队」，你只要不关这台机器，任务照常走。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" id="s3">
+      <div class="step-head">
+        <div class="step-num">03</div>
+        <div class="step-title">
+          <h3>设置访问口令</h3>
+          <p>浏览器打开 <code>127.0.0.1:5244</code>，会跳到一个初始化向导，自己填用户名和密码（4 位以上）。<b>不用去日志里找随机密码</b>——新版把那条逻辑去掉了。</p>
+        </div>
+      </div>
+      <div class="step-body">
+        <div>
+          <ul class="do">
+            <li><b>1</b><span>浏览器地址栏输入 <code>127.0.0.1:5244</code> 回车</span></li>
+            <li><b>2</b><span>看到「初始化 OpenList」就按提示填：用户名、密码、确认密码、网站标题</span></li>
+            <li><b>3</b><span>点初始化，然后用刚才的口令登录</span></li>
+          </ul>
+          <div class="tip"><span class="lab">记住</span><p>这组口令只服务这一次。第 08 步会把文件夹整个删掉，那时候它就一起没了。</p></div>
+        </div>
+        <div>
+          <div class="figure">
+            <img src="assets/opt/login.jpg" alt="登录界面">
+            <figcaption><b>图</b>初始化完成后就是这个界面，填刚才设的用户名与口令。</figcaption>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" id="s4">
+      <div class="step-head">
+        <div class="step-num">04</div>
+        <div class="step-title">
+          <h3>接入来源目录</h3>
+          <p>手上那个 <code>\\10.212.x.x</code> 是 SMB 共享。在后台把它接成一个目录，路径写 <code>/school</code>。</p>
+        </div>
+      </div>
+      <div class="step-body">
+        <div>
+          <ul class="do">
+            <li><b>1</b><span>左侧点<b>存储</b> → 右上角<b>添加</b></span></li>
+            <li><b>2</b><span>驱动下拉里选 <b>SMB</b></span></li>
+            <li><b>3</b><span>按右边这张表填，然后点最下面的<b>添加</b></span></li>
+            <li><b>4</b><span>卡片上出现绿色的 <b>work</b> 就算接上了</span></li>
+          </ul>
+          <div class="tip warn"><span class="lab">注意</span><p>如果那个地址在资源管理器里打不开、只能靠网页或专门的客户端进，那它多半是 WebDAV 而不是 SMB，填法见右下表。</p></div>
+        </div>
+        <div>
+          <table class="fields">
+            <caption>SMB 必填项</caption>
+            <tr><th>字段</th><th>填什么</th></tr>
+            <tr><td>挂载路径 <span class="req">*</span></td><td><code>/school</code></td></tr>
+            <tr><td>地址 <span class="req">*</span></td><td><code>10.212.x.x</code>（手上那个 IP）</td></tr>
+            <tr><td>用户名 <span class="req">*</span></td><td>给你的账号；没有就试 <code>guest</code></td></tr>
+            <tr><td>密码</td><td>给你的密码，没有就留空</td></tr>
+            <tr><td>根文件夹路径 <span class="req">*</span></td><td><code>.</code>（保持默认）</td></tr>
+            <tr><td>分享名称 <span class="req">*</span></td><td>共享文件夹名，如 <code>student</code></td></tr>
+          </table>
+          <table class="fields">
+            <caption>若是 WebDAV，改成这四项</caption>
+            <tr><td>挂载路径 <span class="req">*</span></td><td><code>/school</code></td></tr>
+            <tr><td>地址 <span class="req">*</span></td><td><code>http://10.212.x.x:端口</code></td></tr>
+            <tr><td>用户名 / 密码 <span class="req">*</span></td><td>给你的账号</td></tr>
+            <tr><td>根文件夹路径 <span class="req">*</span></td><td><code>/</code></td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="step-body" style="margin-top:26px">
+        <div class="figure">
+          <img src="assets/opt/drv-smb.jpg" alt="添加 SMB 存储的表单">
+          <figcaption><b>图</b>真实界面。左栏是通用项，右边的「地址 / 用户名 / 密码 / 分享名称」才是关键。</figcaption>
+        </div>
+        <div class="figure">
+          <img src="assets/opt/storages.jpg" alt="存储列表">
+          <figcaption><b>图</b>接好之后列表长这样。状态是 <b>work</b> 才对；报错就点编辑改。</figcaption>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" id="s5">
+      <div class="step-head">
+        <div class="step-num">05</div>
+        <div class="step-title">
+          <h3>接入归档位置</h3>
+          <p>驱动选<b>「123 云盘开放平台」</b>。它要一对「客户端 ID / 客户端秘钥」——这两个值<b>不是在这里申请</b>，是从你原来那台机器上已经挂好的 <code>/123</code> 里抄过来。</p>
+        </div>
+      </div>
+      <div class="step-body">
+        <div>
+          <ul class="do">
+            <li><b>1</b><span>在原来那台电脑的 OpenList 里，<b>存储</b> → <code>/123</code> → <b>编辑</b></span></li>
+            <li><b>2</b><span>把 <b>客户端 ID</b> 和 <b>客户端秘钥</b> 复制下来（发给自己一份也行）</span></li>
+            <li><b>3</b><span>回到现在这台：<b>存储 → 添加 → 驱动选「123 云盘开放平台」</b></span></li>
+            <li><b>4</b><span>挂载路径填 <code>/pan123</code>，把刚才那两串粘进去，<b>添加</b></span></li>
+          </ul>
+          <div class="tip warn"><span class="lab">保密</span><p>这两个值和你的密码同级。<b>不要</b>贴到 GitHub、聊天群或截图里发出去。本页所有截图都来自演示实例，不含真实凭据。</p></div>
+        </div>
+        <div>
+          <table class="fields">
+            <caption>123 云盘开放平台必填</caption>
+            <tr><th>字段</th><th>填什么</th></tr>
+            <tr><td>挂载路径 <span class="req">*</span></td><td><code>/pan123</code></td></tr>
+            <tr><td>根文件夹 ID <span class="req">*</span></td><td><code>0</code>（0 = 根目录）</td></tr>
+            <tr><td>客户端 ID</td><td>从旧实例的 <code>/123</code> 抄</td></tr>
+            <tr><td>客户端秘钥</td><td>同上</td></tr>
+            <tr><td>访问令牌 / 刷新令牌</td><td>有就填，没有就用上面那对</td></tr>
+          </table>
+          <div class="figure" style="margin-top:16px">
+            <img src="assets/opt/drv-123.jpg" alt="云盘存储表单">
+            <figcaption><b>图</b>下拉里选「123 云盘开放平台」，下面这几个格子就是你要填的。</figcaption>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-body solo" style="margin-top:8px">
+        <details class="acc">
+          <summary>更省事：不用手输，直接导入一份配置</summary>
+          <div class="acc-body">
+            <p>存储页右上角除了<b>添加</b>，还有<b>导出</b>和<b>导入</b>。在旧机器上选中 <code>/123</code> 点<b>导出</b>，把得到的那串 JSON 存成 <code>.json</code> 文件；到新机器点<b>导入</b>，选这个文件，云盘就整条接好了，一个字段都不用敲。</p>
+            <p>下面是那条配置的<b>骨架</b>——真实值请从你自己的导出文件里拿，<span class="req">不要</span>把带令牌的版本发到网上：</p>
+            <div class="block">{
+  "mount_path": "/pan123",
+  "driver": "123 Open",
+  "addition": {
+    "root_folder_id": "0",
+    "AccessToken":  "&lt;从旧机器导出里抄&gt;",
+    "RefreshToken": "&lt;从旧机器导出里抄&gt;",
+    "ClientID":     "",
+    "ClientSecret": "",
+    "use_online_api": true,
+    "api_url_address": "https://api.oplist.org/123cloud/renewapi"
+  }
+}</div>
+            <div class="tip warn"><span class="lab">保密</span><p><code>AccessToken</code> / <code>RefreshToken</code> 就是钥匙，谁拿到都能进你的云盘。导入完把那个 JSON 文件删掉，别放进 GitHub 仓库。</p></div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="step" id="s6">
+      <div class="step-head">
+        <div class="step-num">06</div>
+        <div class="step-title">
+          <h3>发起一次归档</h3>
+          <p>回前台首页，进 <code>school</code>，勾上要的东西，点<b>复制</b>，在弹出的<b>「选择目标文件夹」</b>里选 <code>pan123</code> 下面的目录。</p>
+        </div>
+      </div>
+      <div class="step-body">
+        <div>
+          <ul class="do">
+            <li><b>1</b><span>左上角点<b>首页</b>，进 <code>school</code></span></li>
+            <li><b>2</b><span>勾选要复制的文件或文件夹（可以整个文件夹勾）</span></li>
+            <li><b>3</b><span>工具栏点<b>复制</b> → 弹窗标题是 <b>「选择目标文件夹」</b> → 一路点进 <code>pan123</code>，选好目录</span></li>
+            <li><b>4</b><span>同名文件选<b>覆盖</b>或<b>跳过</b>，然后提交</span></li>
+          </ul>
+          <div class="tip"><span class="lab">关键</span><p>它<b>不是当场同步</b>，是提交一个后台任务排队跑。网页可以关、可以继续干别的——但<b>那台机器和那个 PowerShell 窗口要活着</b>。</p></div>
+        </div>
+        <div>
+          <div class="block"><span class="cmt"># 提交之后它其实在做这件事</span>
+POST /api/fs/copy
+<span class="k">→ Successfully created 1 copy task(s)</span>
+<span class="cmt"># 不是「复制→切目录→粘贴」的剪贴板流程</span>
+<span class="cmt"># 命令行也没有 copy 命令，别去试</span></div>
+          <div class="figure" style="margin-top:16px">
+            <img src="assets/opt/front-123.jpg" alt="前台首页浏览已接入的目录">
+            <figcaption><b>图</b>前台首页就是操作台：先选来源，再选归档位置。</figcaption>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" id="s7">
+      <div class="step-head">
+        <div class="step-num">07</div>
+        <div class="step-title">
+          <h3>查看队列</h3>
+          <p>后台左侧点<b>任务</b> → <b>复制</b>，里面有每个任务的进度、速度和状态。状态变成<b>成功</b>才算跑完。</p>
+        </div>
+      </div>
+      <div class="step-body">
+        <div>
+          <ul class="do">
+            <li><b>1</b><span>点左侧<b>任务</b>，再点<b>复制</b>那一栏</span></li>
+            <li><b>2</b><span>看状态：等待中 → 运行中 → 成功（或失败）</span></li>
+            <li><b>3</b><span>失败的看错误信息，多半是「磁盘满」或「文件名带特殊字符」</span></li>
+            <li><b>4</b><span>全部成功后，回前台进 <code>pan123</code> 抽查两三个文件能不能打开</span></li>
+          </ul>
+          <div class="tip warn"><span class="lab">大文件</span><p>几百 MB 以上会跑很久，速度取决于那条出网线路。这期间别关窗口，也别让电脑睡眠。</p></div>
+        </div>
+        <div>
+          <div class="figure">
+            <img src="assets/opt/tasks.jpg" alt="任务页，含离线下载/上传/复制/移动/解压分类">
+            <figcaption><b>图</b>任务页分五类：离线下载、上传、复制、移动、解压。你要看的是<b>复制</b>。</figcaption>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" id="s8">
+      <div class="step-head">
+        <div class="step-num">08</div>
+        <div class="step-title">
+          <h3>清理本机</h3>
+          <p>跑完就把这台机器还原。程序是绿色的，删文件夹就干净了；但口令和云盘凭据都存在那个 <code>data</code> 文件夹里，<b>一定要删</b>。</p>
+        </div>
+      </div>
+      <div class="step-body">
+        <div>
+          <ul class="do">
+            <li><b>1</b><span>前台进 <code>pan123</code> 抽查文件确实在了</span></li>
+            <li><b>2</b><span>回 PowerShell 窗口按 <code>Ctrl + C</code> 停掉服务</span></li>
+            <li><b>3</b><span>删掉桌面上整个 openlist 文件夹（含 <code>data</code>）</span></li>
+            <li><b>4</b><span>清掉浏览器里 <code>127.0.0.1:5244</code> 的历史记录</span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="tip warn"><span class="lab">必须删</span><p><code>data</code> 里有 <code>data.db</code>（你的口令）和云盘的客户端密钥。<b>留在别人的电脑上，等于把云盘钥匙留在那儿。</b></p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<section class="finish">
+  <div>
+    <h3>换设备之后，<em>随手就能取</em></h3>
+    <p>那台机器一关机，<code>10.212.x.x</code> 就再也连不上了——但东西已经变成你云盘里的文件，手机随时能拿。</p>
+    <div class="app"><img src="assets/123pan.png" alt="123 云盘"><span>123 云盘 · App 与网页版同账号</span></div>
+  </div>
+  <ol>
+    <li>装云盘 App，用同一个账号登录</li>
+    <li>或者手机浏览器打开云盘网页版</li>
+    <li>找到你选的那个目录，就是刚才那批</li>
+    <li>要长期留着就下载到相册 / 本地</li>
+  </ol>
+</section>
+
+<section class="faq" id="faq">
+  <h2>卡住了 · 五个最常见</h2>
+  <div class="faq-grid">
+    <dl class="qa"><dt>双击 exe 闪一下就没了</dt><dd>正常。它需要 <code>server</code> 参数。按第 02 步在 PowerShell 里运行。</dd></dl>
+    <dl class="qa"><dt>127.0.0.1:5244 打不开</dt><dd>PowerShell 窗口被关了，或者 5244 被占用。重开窗口再跑一次；还不行就改 <code>data/config.json</code> 里的 <code>http_port</code>。</dd></dl>
+    <dl class="qa"><dt>来源目录显示错误</dt><dd>地址、分享名、账号三者之一不对。先在资源管理器里用同一组账号打开那个 <code>\\10.212.x.x\share</code> 验证一次。</dd></dl>
+    <dl class="qa"><dt>任务一直「等待中」</dt><dd>多半是目标盘鉴权失败。去 <code>/pan123</code> 那条存储点「编辑」重填客户端 ID / 秘钥，再试。</dd></dl>
+    <dl class="qa"><dt>能不能用命令行做</dt><dd>不能。命令行没有复制命令，只能走网页（后台任务）或调接口。</dd></dl>
+  </div>
+</section>
+
+<footer>
+  <span>本页是个人操作记录，不含任何真实凭据 · 界面截图来自 OpenList v4.2.9</span>
+  <span><img src="assets/github.svg" alt=""> 源文件与更新见 GitHub 仓库</span>
+</footer>
+
+<script>
+const links=[...document.querySelectorAll('#rail a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(l=>l.classList.toggle('is-active', l.getAttribute('href')==='#'+e.target.id));
+    }
+  });
+},{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
