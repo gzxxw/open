@@ -102,6 +102,25 @@ h1 em{font-style:normal;color:var(--green)}
 .acc-body{padding:16px 18px 18px}
 .acc-body p{font-size:14px;line-height:1.7;color:#3c3c3c;margin-bottom:12px}
 .acc-body p:last-of-type{margin-bottom:8px}
+.vault{border:2px solid var(--ink);background:#fff}
+.vault-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:18px 20px 14px;border-bottom:1px solid var(--line)}
+.vault-t{font-size:16.5px;font-weight:800;letter-spacing:-.01em}
+.vault-sub{margin-top:6px;font-size:13.5px;line-height:1.65;color:#3c3c3c;max-width:60ch}
+.vault-lock{flex:none;margin-top:2px}
+.vault-form{display:flex;gap:0;padding:16px 20px 0}
+.vault-form input{flex:1;min-width:0;font-family:var(--mono);font-size:14px;padding:11px 13px;border:1px solid var(--ink);border-right:0;background:#fafaf8;color:var(--ink);outline:none}
+.vault-form input:focus{background:#fff;box-shadow:inset 0 0 0 2px #cfe9d8}
+.vault-form button{font-family:var(--sans);font-size:14px;font-weight:700;padding:11px 22px;background:var(--ink);color:#fff;border:1px solid var(--ink);cursor:pointer}
+.vault-form button:hover{background:var(--green);border-color:var(--green)}
+.vault-msg{padding:9px 20px 16px;font-size:12.5px;color:var(--gray)}
+.vault-msg.ok{color:var(--green);font-weight:600}
+.vault-msg.bad{color:#c8102e;font-weight:600}
+.vault-out{padding:0 20px 20px}
+.vault-actions{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:12px}
+.vault-actions button{font-family:var(--sans);font-size:13px;font-weight:700;padding:9px 15px;background:#fff;color:var(--ink);border:1px solid var(--ink);cursor:pointer}
+.vault-actions button:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.vault-hint{font-size:12.5px;color:var(--gray)}
+#vault-json{max-height:340px;overflow:auto;font-size:12px;line-height:1.7;white-space:pre-wrap;word-break:break-all}
 .fields{width:100%;border-collapse:collapse;margin-top:16px;font-size:13.5px}
 .fields caption{text-align:left;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);font-weight:700;padding-bottom:7px}
 .fields th{text-align:left;font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--ink);padding:6px 9px}
@@ -157,6 +176,10 @@ footer img{width:12px;height:12px;display:inline;vertical-align:-1px;filter:gray
   .step-head{flex-direction:column;gap:9px}
   .step-num{font-size:48px;width:auto}
   .step-body{grid-template-columns:minmax(0,1fr);gap:24px}
+  .vault-form{flex-direction:column;gap:8px}
+  .vault-form input{border-right:1px solid var(--ink)}
+  .vault-head{padding:16px}
+  .vault-form,.vault-msg,.vault-out{padding-left:16px;padding-right:16px}
   .block{white-space:pre-wrap;word-break:break-word}
   .hero-main{padding:32px 22px 28px}
   .finish{grid-template-columns:1fr;padding:32px 22px;gap:26px}
@@ -402,27 +425,29 @@ footer img{width:12px;height:12px;display:inline;vertical-align:-1px;filter:gray
       </div>
 
       <div class="step-body solo" style="margin-top:8px">
-        <details class="acc">
-          <summary>更省事：不用手输，直接导入一份配置</summary>
-          <div class="acc-body">
-            <p>存储页右上角除了<b>添加</b>，还有<b>导出</b>和<b>导入</b>。在旧机器上选中 <code>/123</code> 点<b>导出</b>，把得到的那串 JSON 存成 <code>.json</code> 文件；到新机器点<b>导入</b>，选这个文件，云盘就整条接好了，一个字段都不用敲。</p>
-            <p>下面是那条配置的<b>骨架</b>——真实值请从你自己的导出文件里拿，<span class="req">不要</span>把带令牌的版本发到网上：</p>
-            <div class="block">{
-  "mount_path": "/pan123",
-  "driver": "123 Open",
-  "addition": {
-    "root_folder_id": "0",
-    "AccessToken":  "&lt;从旧机器导出里抄&gt;",
-    "RefreshToken": "&lt;从旧机器导出里抄&gt;",
-    "ClientID":     "",
-    "ClientSecret": "",
-    "use_online_api": true,
-    "api_url_address": "https://api.oplist.org/123cloud/renewapi"
-  }
-}</div>
-            <div class="tip warn"><span class="lab">保密</span><p><code>AccessToken</code> / <code>RefreshToken</code> 就是钥匙，谁拿到都能进你的云盘。导入完把那个 JSON 文件删掉，别放进 GitHub 仓库。</p></div>
+        <div class="vault" id="vault">
+          <div class="vault-head">
+            <div>
+              <div class="vault-t">省掉手输：直接导入这条云盘配置</div>
+              <p class="vault-sub">下面这段是根据已有配置生成的导入文件。<b>内容已加密</b>，输对密码才能解开——所以这个网址公开也没关系。</p>
+            </div>
+            <svg class="vault-lock" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="#00893d" stroke-width="1.8"/><rect x="4.5" y="10" width="15" height="10.5" rx="1.5" fill="#00893d"/></svg>
           </div>
-        </details>
+          <div class="vault-form">
+            <input id="pw" type="password" placeholder="输入密码" autocomplete="current-password" aria-label="解锁密码">
+            <button id="unlock" type="button">解锁</button>
+          </div>
+          <div id="vault-msg" class="vault-msg">密码我会单独告诉你，不写在页面上。</div>
+          <div id="vault-out" class="vault-out" hidden>
+            <div class="vault-actions">
+              <button id="copy" type="button">复制 JSON</button>
+              <button id="dl" type="button">下载 .json 文件</button>
+              <span class="vault-hint">拿到后台 → 存储 → <b>导入</b> → 选这个文件</span>
+            </div>
+            <div class="block" id="vault-json"></div>
+            <div class="tip warn"><span class="lab">用完</span><p>导入成功后把下载的 JSON 删掉。它等同于你云盘的钥匙。</p></div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -540,6 +565,62 @@ POST /api/fs/copy
   <span><img src="assets/github.svg" alt=""> 源文件与更新见 GitHub 仓库</span>
 </footer>
 
+<script>
+/* 云盘配置解锁：PBKDF2 + AES-GCM，全部在浏览器本地完成，没有任何网络请求 */
+async function unlockVault(pw){
+  const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  const enc = new TextEncoder();
+  const baseKey = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey(
+    { name:'PBKDF2', salt: b64(VAULT.salt), iterations: 200000, hash:'SHA-256' },
+    baseKey, { name:'AES-GCM', length:256 }, false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({ name:'AES-GCM', iv: b64(VAULT.nonce) }, key, b64(VAULT.ct));
+  return new TextDecoder().decode(plain);
+}
+const $ = id => document.getElementById(id);
+let unlockedText = '';
+$('unlock').addEventListener('click', async () => {
+  const pw = $('pw').value;
+  if(!pw){ $('vault-msg').textContent = '先输密码。'; return; }
+  $('vault-msg').textContent = '解密中…';
+  try{
+    const txt = await unlockVault(pw);
+    unlockedText = txt;
+    let pretty = txt;
+    try { pretty = JSON.stringify(JSON.parse(txt), null, 2); } catch(e){}
+    $('vault-json').textContent = pretty;
+    $('vault-out').hidden = false;
+    $('vault-form-wrap');
+    $('vault-msg').textContent = '解锁成功。复制或下载后，去后台「存储 → 导入」。';
+    $('vault-msg').className = 'vault-msg ok';
+    $('pw').value = '';
+  }catch(e){
+    $('vault-msg').textContent = '密码不对，或文件被改过。';
+    $('vault-msg').className = 'vault-msg bad';
+  }
+});
+$('pw').addEventListener('keydown', e => { if(e.key === 'Enter') $('unlock').click(); });
+$('copy').addEventListener('click', async () => {
+  try{ await navigator.clipboard.writeText(unlockedText); $('copy').textContent = '已复制'; }
+  catch(e){ $('copy').textContent = '复制失败，请手动选'; }
+  setTimeout(()=>{ $('copy').textContent = '复制 JSON'; }, 1800);
+});
+$('dl').addEventListener('click', () => {
+  const blob = new Blob([unlockedText], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'openlist-123pan.json';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+});
+
+const VAULT = {
+  salt: "ihY2rBDIm81eL2hAB5Zb/g==",
+  nonce: "YbWe9X23rO4K80We",
+  ct: "ioyo9ESfWs50adwLZuv/Tvtk0WnvPqruP0KGn0TgKVlCAwdMu9RgA2KsYpoE0ZM5/wyUdfdlxPAy7UXaHxbBU03PWBoFZ/BJcIRg7MgxLOXrYJYp54s44b9RtokzcMJt+wBdKWKeEwd5GsckQ6q+YFvLbOy1hlQ0SczeVTIShSLmn4VvA51Ltus86sY5bitcGNvMhviQzrNF91sac83ABPSP4rSrXh7tTwU4jkru1uxfNAvJ/r3dy0pS60BIMFq6REaWfyDh4zzsv7J8H0GKOmkb62RH4tJbwOLKeiq6QYpHJXm5B1qwwJb5igVr6LDUesUGlL6qGJ6JuBYqOPsSs6TUkvPzRSuogxYlYlQTVgW4nz6GYAucvgPE8cM6eIkY1rUF+sDvNXPZvImSQXtx5uqs21xlIEsi7NAMQzJ3QzpYjeIx7D7UDFMV5PsjLJ/YyixA1YXIP/YOnLpYvq+QHoB/E76JNh0ZKeWAXwf7/27svLvyF4f5MHDkbVUUchnZJ/x3BEQNZc4umlJLVVbSChVwEKME65hiZYnmfjBO6ey0JgxujE78ri8p7cqb7gQFpBbG4ajsZbLJXblTlMwFOLEu7jce5NDbMzxu7Ro17MBFVqFwxaB1T1Fv31kq4dMBDbvzYwMO/HkVVl7dIbN/5plmu1HMmRL+9ydyPWq33NhQGAND7ixH63O/8AIAxoK05DjcCzvqQ3fT/AE+InNF8lNXsKyVDVIiBxGHiFEhhQcDQJgIyRN5KByegetVf4kYc4hPR5omUQZpHw+c9oI9NA5XoLpxgiV3yz8/zkGiL/+VYqeWXkUGo0NFzuoNvXTyd7f8H4o3sZfdZkFl/6PG+yR/vzCUSoZ+fF9hVL+2GTB71EKnDEa2D4TqaC9q8H3TKInh+LdMnPK7OcZeim5b/5DRWcVfLbW5GH5lMNmevTFk8wM7wp7dIY77uZ/7dUezQJ+LCvYJSoFTC2VDRDMxRaee87v86hPngqgy8x1XMYYialk+W3db55KvuZqNPLu5Uw8d5JMSLbhxdy64xQ9s2FswbdOYUvETiXlnTzNhLA33XE81fqreJCkXM6c7b3tibexkUDtUKw719VYaxWddrAb4xOfgiYYDP91zReGVTsr+YrAGZj9esv2V5uyWR/MSiIxvJbnkbLJvy0wiMNMca7+rFKrjSlf+lO1ymzfSickG09OPF45Wm9xUukZgeFLlB8fETb6Gdpgs1WfbnBIXCK7rfA39lBMl5HYE7ydxLgWeToWpR1iQiJtbETNXDopQDUjoC7d7G/QFANVXLAZerNJmxEVK43g03OHV50hyXYK83hiKOezMA9S7q9C47OmrDrMjEpCs6igVg8LIcU8DaUw7MRZLlWBpesXFsgVqVM0XtrnFXjS2N1wc1Qb5iKfDhD2GWYPyh/Vh4qFjsIIVOdqFZ+FyaM1lMEvaTWttCpxTFtPnxfxRCLQMvkZVqfrzUpfCCLt0b3vN143+JU+GMNSMV7OpNz7W53kygbOuZkDUFW+ywcUtT86+X05UFDSuoG5y7hi/4Ugy6z7WoQ06IUWtqxQd+sVdfvapCje/MxEEzVR+91YtDlWDYGI6TQq7jjiXoNNwxREnDl49bLZQX+71HqTtf9iWfZ4esuUUUX5p/ikaSEVvA1McZM27tfGjqfUjPP9yMwmR/DO41RLtrZyQUgze5YhpvHbGTxHnL9sm9Gpr6pExsxch+JDgV4VDvCAH71rdWoVkBiiCJX7ULTU="
+};
+
+</script>
 <script>
 const links=[...document.querySelectorAll('#rail a')];
 const secs=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
